@@ -1,3 +1,4 @@
 [submodule "array"]
 	path = include/array
 	url = git@github.com:Lodifice/array.git
+	branch = master
