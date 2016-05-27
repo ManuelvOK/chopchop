@@ -1,4 +1,3 @@
-[submodule "array"]
+[submodule "include/array"]
 	path = include/array
-	url = git@github.com:Lodifice/array.git
-	branch = master
+	url = https://github.com/Lodifice/array.git
