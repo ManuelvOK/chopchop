@@ -18,13 +18,13 @@ struct job {
 };
 
 /* init_job:
- * allocate and initialise a job named <id> <n_nops> operations
+ * initialise a job named <id> <n_nops> operations
  */
-struct job *init_job(unsigned id, unsigned n_ops);
+struct job init_job(unsigned id, unsigned n_ops);
 
 /* init_operation:
- * allocate and initialise an operation on <machine> taking <duration> time
+ * initialise an operation on <machine> taking <duration> time
  */
-struct operation *init_operation(unsigned machine, unsigned duration);
+struct operation init_operation(unsigned machine, unsigned duration);
 
 #endif /* ifndef JOBS_H */
