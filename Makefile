@@ -8,11 +8,13 @@ OBJDIR = $(CURDIR)/$(BUILD)
 SRCDIR = $(CURDIR)/src
 INCDIR = $(CURDIR)/include
 DEPDIR = $(CURDIR)/.d
+LIBDIR = $(CURDIR)/array
 
 .PHONY: $(all)
 all: $(OBJDIR) $(DEPDIR)
 	+@$(MAKE) --no-print-directory -C $< -f $(CURDIR)/Makefile \
-	 SRCDIR=$(SRCDIR) INCDIR=$(INCDIR) DEPDIR=$(DEPDIR) $(MAKECMDGOALS)
+		SRCDIR=$(SRCDIR) INCDIR=$(INCDIR) DEPDIR=$(DEPDIR) LIBDIR=$(LIBDIR) \
+		$(MAKECMDGOALS)
 
 .PHONY: $(OBJDIR)
 $(OBJDIR):
@@ -45,12 +47,13 @@ DEP = $(SRC:%.c=$(DEPDIR)/%.d)
 
 CFLAGS  = -std=c99 -Wall -Wextra -Wpedantic -g
 CFLAGS += -I$(INCDIR)
+LIBS = -larray
 
 .PHONY: all
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ -L$(LIBDIR) $(LIBS)
 
 $(DEPDIR)/%.d: %.c
 	$(CC) $(CFLAGS) -MM -o $@ $<

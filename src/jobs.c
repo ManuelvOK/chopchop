@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include <array/array.h>
+#include <array.h>
 
 struct job init_job(unsigned id, unsigned n_ops) {
     struct job j;
