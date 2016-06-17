@@ -15,7 +15,7 @@ struct time_assignment *generate_schedule(struct jsp *job_order) {
         aforeach(o, job_order->jobs[j].ops) {
             unsigned m_id = job_order->jobs[j].ops[o].machine;
             unsigned j_id = job_order->jobs[j].id;
-            unsigned earliest_start = machine_times[m_id] < job_times[j_id]
+            unsigned earliest_start = machine_times[m_id] > job_times[j_id]
                                       ? machine_times[m_id]
                                       : job_times[j_id];
             struct time_assignment ta = {
