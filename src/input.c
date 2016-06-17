@@ -33,6 +33,8 @@ struct jsp eval_input(FILE* input_file) {
             if (nptr == endptr)
                 break;
             printf("(%d | %d) ", machine, duration);
+            struct operation op = {machine, duration};
+            apush(jobs[job].ops, op);
         }
         printf("\n");
     }
