@@ -17,3 +17,11 @@ struct operation init_operation(unsigned machine, unsigned duration) {
     struct operation op = {.machine = machine, .duration = duration};
     return op;
 }
+
+struct jsp init_jsp_data(void) {
+    struct jsp js;
+    js.n_machines = 0;
+    array(struct job, j, 0);
+    js.jobs = j;
+    return js;
+}
