@@ -8,7 +8,7 @@
 #include <eval.h>
 #include <hood.h>
 
-enum {T_MAX = 8000, TEMP_INITIAL = 22};
+enum {T_MAX = 8000000, TEMP_INITIAL = 22};
 static const double cooling_rate = 10;
 
 static bool accept_anyways(unsigned cur_eval, unsigned neigh_eval,
@@ -18,6 +18,8 @@ static unsigned update_temperature(unsigned t);
 
 struct jsp optimise(struct jsp schedule, enum algorithm alg) {
     double temperature = TEMP_INITIAL;
+    struct jsp optimum = copy_jsp_data(schedule);
+    unsigned opt_eval = eval(&optimum);
     for (unsigned t = 1; t < T_MAX; ++t) {
         unsigned cur_eval = eval(&schedule);
         struct jsp neigh_schedule = get_neighbour(schedule);
@@ -33,11 +35,16 @@ struct jsp optimise(struct jsp schedule, enum algorithm alg) {
         } else {
             delete_jsp(&neigh_schedule);
         }
+        if (cur_eval < opt_eval) {
+            afree(optimum.operations);
+            optimum = copy_jsp_data(schedule);
+            opt_eval = cur_eval;
+        }
         if (alg == A_SIMULATED_ANNEALING) {
             temperature = update_temperature(t);
         }
     }
-    return schedule;
+    return optimum;
 }
 
 static bool accept_anyways(unsigned cur_eval, unsigned neigh_eval,
