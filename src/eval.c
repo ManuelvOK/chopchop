@@ -6,10 +6,15 @@
 #include <array.h>
 
 struct time_assignment *generate_schedule(struct jsp *job_order) {
+    /* mapping of machine ids to point in time until they are blocked */
     unsigned machine_times[job_order->n_machines];
     memset(machine_times, 0, sizeof machine_times);
+
+    /* mapping of job ids to point in time until they are blocked */
     unsigned job_times[alength(job_order->jobs)];
     memset(job_times, 0, sizeof job_times);
+
+    /* array to throw all the time assignments (one for each operation) into */
     array(struct time_assignment, schedule, 0);
     aforeach(j, job_order->jobs) {
         aforeach(o, job_order->jobs[j].ops) {
