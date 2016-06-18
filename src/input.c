@@ -36,7 +36,7 @@ struct jsp eval_input(FILE* input_file) {
     for (int job = 0; job < n_jobs; ++job) {
 
 #if DEBUG
-        printf("Job %d:\t", job);
+        printf("\tJob %d:\t", job);
 #endif /* DEBUG */
 
         fgets(line, 255, input_file);
@@ -71,6 +71,9 @@ struct jsp eval_input(FILE* input_file) {
 #endif /* DEBUG */
 
     }
+#if DEBUG
+    printf("\nBeginning to create initial order.\n");
+#endif /* DEBUG */
 
     /* Get an initial order for the operations */
     array(struct operation, operations, n_operations);
@@ -87,23 +90,18 @@ struct jsp eval_input(FILE* input_file) {
                 row = 0;
             }
         }
+
+#if DEBUG
+        printf("\tInserted %3d. operation from job %3d.\n", row, col);
+#endif /* DEBUG */
+
         /* add operation to ordered operation array */
         operations[i] = opsofchops[row][col];
         if (++row >= n_jobs) {
             ++col;
             row = 0;
         }
-
-#if DEBUG
-        printf("Inserted for row %2d and col %2d.\n", row, col);
-#endif /* DEBUG */
     }
-
-#if DEBUG
-    aforeach(i, operations) {
-        printf("%d\n", operations[i].job);
-    }
-#endif /* DEBUG */
 
     struct jsp jsp = {.n_machines = n_machines,
                       .operations = operations,
