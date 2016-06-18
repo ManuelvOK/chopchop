@@ -67,7 +67,7 @@ unsigned eval(struct jsp *job_order) {
 void print_schedule(struct time_assignment *schedule) {
     printf("Schedule generated:\n");
     aforeach(i, schedule) {
-        printf("\tJob %3u on machine %3u from %6u to %6u\n", schedule[i].machine,
-               schedule[i].job, schedule[i].start, schedule[i].end);
+        printf("\tJob %3u on machine %3u from %6u to %6u\n", schedule[i].job,
+               schedule[i].machine, schedule[i].start, schedule[i].end);
     }
 }
