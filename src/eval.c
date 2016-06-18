@@ -41,8 +41,9 @@ unsigned eval(struct time_assignment *schedule) {
 }
 
 void print_schedule(struct time_assignment *schedule) {
+    printf("Schedule generated:\n");
     aforeach(i, schedule) {
-        printf("J%u on M%u from %u to %u\n", schedule[i].machine,
+        printf("\tJob %3u on machine %3u from %6u to %6u\n", schedule[i].machine,
                schedule[i].job, schedule[i].start, schedule[i].end);
     }
 }

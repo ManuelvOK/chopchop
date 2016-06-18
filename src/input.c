@@ -13,30 +13,30 @@ struct jsp eval_input(FILE* input_file) {
     printf("%s\n", line);
 
     /* scan job- and operation count from first line */
-    int n_jobs;
-    int n_machines;
-    sscanf(line, "%d %d", &n_jobs, &n_machines);
+    unsigned n_jobs;
+    unsigned n_machines;
+    sscanf(line, "%u %u", &n_jobs, &n_machines);
 
     /* init job array */
     struct operation *opsofchops[n_jobs];
-    for (int i = 0; i < n_jobs; ++i) {
+    for (unsigned i = 0; i < n_jobs; ++i) {
         array(struct operation, op, 0);
         opsofchops[i] = op;
     }
 
     /* iterate through file lines */
-    int machine;
-    int duration;
-    int n_operations = 0;
+    unsigned machine;
+    unsigned duration;
+    unsigned n_operations = 0;
 
 #if DEBUG
-    printf("%d Jobs Found.\n", n_jobs);
+    printf("%u Jobs Found.\n", n_jobs);
 #endif /* DEBUG */
 
-    for (int job = 0; job < n_jobs; ++job) {
+    for (unsigned job = 0; job < n_jobs; ++job) {
 
 #if DEBUG
-        printf("\tJob %d:\t", job);
+        printf("\tJob %3u:\t", job);
 #endif /* DEBUG */
 
         fgets(line, 255, input_file);
@@ -44,7 +44,7 @@ struct jsp eval_input(FILE* input_file) {
         /* iterate through operations */
         char *nptr = line;
         char *endptr = NULL;
-        for (int nth = 0; ;++nth) {
+        for (unsigned nth = 0; ;++nth) {
             machine = strtol(nptr, &endptr, 0);
             nptr = endptr;
             duration = strtol(nptr, &endptr, 0);
@@ -54,7 +54,7 @@ struct jsp eval_input(FILE* input_file) {
             nptr = endptr;
 
 #if DEBUG
-            printf("(%d | %d) ", machine, duration);
+            printf("(%3u | %3u) ", machine, duration);
 #endif /* DEBUG */
 
             /* add operation */
@@ -77,9 +77,9 @@ struct jsp eval_input(FILE* input_file) {
 
     /* Get an initial order for the operations */
     array(struct operation, operations, n_operations);
-    int row = 0;
-    int col = 0;
-    for (int i = 0; i < n_operations; ++i) {
+    unsigned row = 0;
+    unsigned col = 0;
+    for (unsigned i = 0; i < n_operations; ++i) {
         /* fast forward until a job is found that has an operation left */
         for(;;) {
             if (col < alength(opsofchops[row])) {
@@ -92,7 +92,7 @@ struct jsp eval_input(FILE* input_file) {
         }
 
 #if DEBUG
-        printf("\tInserted %3d. operation from job %3d.\n", row, col);
+        printf("\tInserted %3u. operation from job %3u.\n", row, col);
 #endif /* DEBUG */
 
         /* add operation to ordered operation array */
