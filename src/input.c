@@ -103,7 +103,7 @@ struct jsp eval_input(FILE* input_file) {
         }
     }
 
-    for (int i = 0; i < n_jobs; ++i) {
+    for (unsigned i = 0; i < n_jobs; ++i) {
         afree(opsofchops[i]);
     }
 
