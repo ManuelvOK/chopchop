@@ -38,7 +38,7 @@ struct jsp optimise(struct jsp schedule, enum algorithm alg, unsigned T_MAX,
             delete_jsp(&neigh_schedule);
         }
         if (cur_eval < opt_eval) {
-            afree(optimum.operations);
+            delete_jsp(&optimum);
             optimum = copy_jsp_data(schedule);
             opt_eval = cur_eval;
         }
