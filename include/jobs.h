@@ -39,4 +39,9 @@ struct jsp init_jsp_data(unsigned n_ops);
  */
 void delete_jsp(struct jsp *);
 
+/* copy_jsp_data:
+ * create a new jsp as a deep copy from an<other> one
+ */
+struct jsp copy_jsp_data(struct jsp other);
+
 #endif /* ifndef JOBS_H */
