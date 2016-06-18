@@ -3,6 +3,7 @@
 #include <time.h>
 #include <string.h>
 
+#include <algorithm.h>
 #include <array.h>
 #include <eval.h>
 #include <input.h>
@@ -26,16 +27,16 @@ int main(int argc, char *argv[]) {
     fclose(input);
 
     /* genrate solution */
-
+    struct jsp solution = optimise(jsp, ALGORITHM, T_MAX, TEMP_INI, C_RATE);
 
     /* print solution */
     puts("");
-    struct time_assignment *schedule = generate_schedule(&jsp);
+    struct time_assignment *schedule = generate_schedule(&solution);
     print_schedule(schedule);
 
     /* avoid memory leakage */
     afree(schedule);
-    delete_jsp(&jsp);
+    delete_jsp(&solution);
     return 0;
 }
 
@@ -60,7 +61,7 @@ static void evaluate_input_parameters(int argc, char *argv[]) {
         } else if (!strcmp(argv[i] + 1, "t")) {
             extract_int(argv[++i], &T_MAX);
             printf("t_max\n");
-        } else if (!strcmp(argv[i] + 1, "i")) {
+        } else if (!strcmp(argv[i] + 1, "T")) {
             extract_int(argv[++i], &TEMP_INI);
             printf("temp_ini\n");
         } else if (!strcmp(argv[i] + 1, "c")) {

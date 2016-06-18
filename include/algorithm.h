@@ -17,6 +17,7 @@ enum algorithm {
  * the given algorithm
  * note: the given <schedule> will be altered and become invalid
  */
-struct jsp optimise(struct jsp schedule, enum algorithm alg);
+struct jsp optimise(struct jsp schedule, enum algorithm alg, unsigned T_MAX,
+                    unsigned TEMP_INITIAL, unsigned COOLING_RATE);
 
 #endif /* ifndef ALGORITHM_H */
