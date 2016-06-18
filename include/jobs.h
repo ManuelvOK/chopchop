@@ -34,4 +34,9 @@ struct operation init_operation(unsigned job, unsigned nth,
  */
 struct jsp init_jsp_data(unsigned n_ops);
 
+/* delete_jsp:
+ * frees the allocated memory in a jsp and sets <n_machines> and <n_jobs> to 0
+ */
+void delete_jsp(struct jsp *);
+
 #endif /* ifndef JOBS_H */

@@ -19,3 +19,10 @@ struct jsp init_jsp_data(unsigned n_ops) {
     js.operations = ops;
     return js;
 }
+
+void delete_jsp(struct jsp *jsp){
+    afree(jsp->operations);
+    jsp->n_machines = 0;
+    jsp->n_jobs = 0;
+    jsp->operations = NULL;
+}
