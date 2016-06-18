@@ -8,16 +8,17 @@
 #include <eval.h>
 #include <hood.h>
 
-enum {T_MAX = 1024, TEMP_INITIAL = 20, TEMP_COOL = 2, SA_SCALE = 128};
+enum {T_MAX = 8000, TEMP_INITIAL = 22};
+static const double cooling_rate = 10;
 
 static bool accept_anyways(unsigned cur_eval, unsigned neigh_eval,
-                           unsigned temperature);
+                           double temperature);
 
 static unsigned update_temperature(unsigned t);
 
 struct jsp optimise(struct jsp schedule, enum algorithm alg) {
-    unsigned temperature = TEMP_INITIAL;
-    for (unsigned t = 0; t < T_MAX; ++t) {
+    double temperature = TEMP_INITIAL;
+    for (unsigned t = 1; t < T_MAX; ++t) {
         unsigned cur_eval = eval(&schedule);
         struct jsp neigh_schedule = get_neighbour(schedule);
         unsigned neigh_eval = eval(&neigh_schedule);
@@ -32,19 +33,21 @@ struct jsp optimise(struct jsp schedule, enum algorithm alg) {
         } else {
             delete_jsp(&neigh_schedule);
         }
-        if (alg == A_SIMULATED_ANNEALING && t % SA_SCALE == 0) {
-            temperature = update_temperature(t / SA_SCALE);
+        if (alg == A_SIMULATED_ANNEALING) {
+            temperature = update_temperature(t);
         }
     }
     return schedule;
 }
 
 static bool accept_anyways(unsigned cur_eval, unsigned neigh_eval,
-                           unsigned temperature) {
+                           double temperature) {
     double rval = rand() / (1.0 * RAND_MAX);
-    return rval < exp((cur_eval - neigh_eval) / temperature);
+    double diff = 1.0 * cur_eval - neigh_eval;
+    return rval < exp((diff) / temperature);
 }
 
 static unsigned update_temperature(unsigned t) {
-    return TEMP_INITIAL * exp(-t * TEMP_COOL);
+    double new_temp = TEMP_INITIAL * exp(-cooling_rate * t / T_MAX);
+    return new_temp;
 }
