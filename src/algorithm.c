@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include <array.h>
 #include <eval.h>
 #include <hood.h>
 
@@ -21,13 +22,15 @@ struct jsp optimise(struct jsp schedule, enum algorithm alg) {
         struct jsp neigh_schedule = get_neighbour(schedule);
         unsigned neigh_eval = eval(&neigh_schedule);
         if (neigh_eval < cur_eval) {
-            /* memory leak incoming */
+            afree(schedule.operations);
             schedule = neigh_schedule;
         } else if ((alg == A_STOCHASTIC_HILLCLIMBING
                    || alg == A_SIMULATED_ANNEALING)
                    && accept_anyways(cur_eval, neigh_eval, temperature)) {
-            /* memory leak incoming */
+            afree(schedule.operations);
             schedule = neigh_schedule;
+        } else {
+            afree(neigh_schedule.operations);
         }
         if (alg == A_SIMULATED_ANNEALING && t % SA_SCALE == 0) {
             temperature = update_temperature(t / SA_SCALE);
