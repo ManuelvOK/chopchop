@@ -35,9 +35,33 @@ struct time_assignment *generate_schedule(struct jsp *job_order) {
     return schedule;
 }
 
-unsigned eval(struct time_assignment *schedule) {
-    (void) schedule;
-    return 0;
+unsigned eval(struct jsp *job_order) {
+    /* mapping of machine ids to point in time until they are blocked */
+    unsigned machine_times[job_order->n_machines];
+    memset(machine_times, 0, sizeof machine_times);
+
+    /* mapping of job ids to point in time until they are blocked */
+    unsigned job_times[job_order->n_jobs];
+    memset(job_times, 0, sizeof job_times);
+
+    aforeach(op, job_order->operations) {
+        unsigned m_id = job_order->operations[op].machine;
+        unsigned j_id = job_order->operations[op].job;
+        unsigned duration = job_order->operations[op].duration;
+        unsigned earliest_start = machine_times[m_id] > job_times[j_id]
+                                    ? machine_times[m_id]
+                                    : job_times[j_id];
+        machine_times[m_id] = earliest_start + duration;
+        job_times[j_id] = earliest_start + duration;
+    }
+    unsigned result = machine_times[0];
+    for (unsigned i = 0; i < sizeof machine_times / sizeof machine_times[0];
+            ++i) {
+        if (result < machine_times[i]) {
+            result = machine_times[i];
+        }
+    }
+    return result;
 }
 
 void print_schedule(struct time_assignment *schedule) {

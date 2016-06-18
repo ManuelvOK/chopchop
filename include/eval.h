@@ -16,14 +16,13 @@ struct time_assignment {
 /* generate_schedule:
  * get an array of time_assignments - one for each operation in <job_order>
  * TODO verify that <job_order> is feasible
- * TODO this function calculates the evaluation on the fly, use it
  */
 struct time_assignment *generate_schedule(struct jsp *job_order);
 
 /* eval:
- * evaluate a <schedule> (array of time_assignments, one for each operation)
+ * evaluate a <schedule>
  */
-unsigned eval(struct time_assignment *schedule);
+unsigned eval(struct jsp *job_order);
 
 /* print_schedule:
  * print a <schedule> to stdout
