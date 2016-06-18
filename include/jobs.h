@@ -13,10 +13,12 @@ struct operation {
 };
 
 /* job shop scheduling problem:
- * <operations> must be scheduled on <n_machines> machines in total
+ * <operations> has to consist of <n_jobs> jobs and has to be scheduled on
+ * <n_machines> machines in total
  */
 struct jsp {
     unsigned n_machines;
+    unsigned n_jobs;
     struct operation *operations; /* dynamic array */
 };
 

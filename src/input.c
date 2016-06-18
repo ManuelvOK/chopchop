@@ -9,19 +9,24 @@ struct jsp eval_input(FILE* input_file) {
     printf("%s\n", line);
 
     /* scan job- and operation count from first line */
-    int job_count;
-    int machine_count;
-    sscanf(line, "%d %d", &job_count, &machine_count);
-    /* init job array */
-    array(struct job, jobs, job_count);
+    int n_jobs;
+    int n_machines;
+    sscanf(line, "%d %d", &n_jobs, &n_machines);
 
-    int machine;
-    int duration;
+    /* init job array */
+    struct operation *opsofchops[n_jobs];
+    for (int i = 0; i < n_jobs; ++i) {
+        array(struct operation, op, 0);
+        opsofchops[i] = op;
+    }
 
     /* iterate through file lines */
-    for (int job = 0; job < job_count; ++job) {
+    int machine;
+    int duration;
+    int n_operations = 0;
+
+    for (int job = 0; job < n_jobs; ++job) {
         fgets(line, 255, input_file);
-        jobs[job] = init_job(job, 0);
 
         /* iterate through operations */
         char *nptr = line;
@@ -34,11 +39,38 @@ struct jsp eval_input(FILE* input_file) {
                 break;
             nptr = endptr;
             printf("(%d | %d) ", machine, duration);
-            struct operation op = {.machine = machine, .duration = duration};
-            apush(jobs[job].ops, op);
+            struct operation op = {.machine  = machine,
+                                   .duration = duration,
+                                   .job      = job};
+            apush(opsofchops[job], op);
+            ++n_operations;
         }
         printf("\n");
     }
-    struct jsp jsp = {machine_count, jobs};
+
+    array(struct operation, operations, n_operations);
+    int row = 0;
+    int col = 0;
+    for (int i = 0; i < n_operations; ++i) {
+        for(;;) {
+            if (alength(opsofchops[row]) <= col + 1) {
+                break;
+            }
+            if (++row >= n_jobs) {
+                ++col;
+                row = 0;
+            }
+        }
+        operations[i] = opsofchops[row][col];
+        if (++row >= n_jobs) {
+            ++col;
+            row = 0;
+        }
+    }
+    aforeach(i, operations) {
+        printf("%d\n", operations[i].job);
+    }
+
+    struct jsp jsp = {.n_machines = n_machines, .operations = operations};
     return jsp;
 }
