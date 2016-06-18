@@ -27,8 +27,9 @@ struct operation init_operation(unsigned job, unsigned nth,
                                 unsigned machine, unsigned duration);
 
 /* init_jsp_data:
- * initialise the jsp specification with an empty operation list and 0 machines
+ * initialise the jsp specification with an empty operation list of length
+ * <n_ops> and a machine counter of 0
  */
-struct jsp init_jsp_data(void);
+struct jsp init_jsp_data(unsigned n_ops);
 
 #endif /* ifndef JOBS_H */

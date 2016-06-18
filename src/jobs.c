@@ -12,10 +12,10 @@ struct operation init_operation(unsigned job, unsigned nth,
     return op;
 }
 
-struct jsp init_jsp_data(void) {
+struct jsp init_jsp_data(unsigned n_ops) {
     struct jsp js;
     js.n_machines = 0;
-    array(struct operation, ops, 0);
+    array(struct operation, ops, n_ops);
     js.operations = ops;
     return js;
 }
