@@ -92,7 +92,7 @@ struct jsp eval_input(FILE* input_file) {
         }
 
 #if DEBUG
-        printf("\tInserted %3u. operation from job %3u.\n", row, col);
+        printf("\tInserted %3u. operation from job %3u.\n", col, row);
 #endif /* DEBUG */
 
         /* add operation to ordered operation array */
