@@ -47,6 +47,12 @@ struct jsp optimise(struct jsp schedule, enum algorithm alg, unsigned T_MAX,
                                              COOLING_RATE);
         }
     }
+    /* if the last tested solution was the optimal one, this has already been
+     * deleted
+     */
+    if (schedule.operations != NULL) {
+        delete_jsp(&schedule);
+    }
     return optimum;
 }
 
