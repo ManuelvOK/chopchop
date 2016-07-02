@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* genrate solution */
-    struct jsp solution = optimise(jsp, ALGORITHM, T_MAX, TEMP_INI, C_RATE);
+    struct jsp solution = optimise(jsp, &model, ALGORITHM, T_MAX, TEMP_INI, C_RATE);
 
     /* print solution */
     puts("");

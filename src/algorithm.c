@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include <array.h>
 #include <eval.h>
@@ -17,10 +18,12 @@ static bool accept_anyways(unsigned cur_eval, unsigned neigh_eval,
 static unsigned update_temperature(unsigned t, unsigned TEMP_INITIAL,
                                    unsigned T_MAX, unsigned COOLING_RATE);
 
-struct jsp optimise(struct jsp schedule, enum algorithm alg, unsigned T_MAX,
+struct jsp optimise(struct jsp schedule, struct jsp **current,
+                    enum algorithm alg, unsigned T_MAX,
                     unsigned TEMP_INITIAL, unsigned COOLING_RATE) {
     double temperature = TEMP_INITIAL;
     struct jsp optimum = copy_jsp_data(schedule);
+    *current = &optimum;
     unsigned opt_eval = eval(&optimum);
     for (unsigned t = 1; t < T_MAX; ++t) {
         unsigned cur_eval = eval(&schedule);
