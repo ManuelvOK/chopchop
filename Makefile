@@ -47,7 +47,7 @@ DEP = $(SRC:%.c=$(DEPDIR)/%.d)
 
 CFLAGS  = -std=c99 -Wall -Wextra -Wpedantic -g
 CFLAGS += -I$(INCDIR)
-LIBS = -larray -lm
+LIBS = -larray -lm -lSDL2 -pthread
 
 .PHONY: all
 all: $(TARGET)
