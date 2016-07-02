@@ -7,6 +7,8 @@
 #include <array.h>
 #include <eval.h>
 #include <input.h>
+#include <vision.h>
+#include <pthread.h>
 
 static void evaluate_input_parameters(int argc, char *argv[]);
 
@@ -15,8 +17,11 @@ int T_MAX = 0;
 int TEMP_INI = 0;
 int C_RATE = 0;
 int ALGORITHM = 0;
+int VISUALISATION = 0;
 
 int main(int argc, char *argv[]) {
+
+
     evaluate_input_parameters(argc, argv);
     /* initialise RNG */
     srand(time(NULL));
@@ -26,6 +31,18 @@ int main(int argc, char *argv[]) {
     struct jsp jsp = eval_input(input);
     fclose(input);
 
+    /* this is for vsualisation */
+    struct jsp *model = &jsp;
+
+    /* start visualisation */
+    pthread_t visualisation;
+
+    if (VISUALISATION) {
+        if (pthread_create(&visualisation, NULL, visualise, (void *) &model)) {
+            printf("Visualisation Failed\n");
+        }
+    }
+
     /* genrate solution */
     struct jsp solution = optimise(jsp, ALGORITHM, T_MAX, TEMP_INI, C_RATE);
 
@@ -33,6 +50,11 @@ int main(int argc, char *argv[]) {
     puts("");
     struct time_assignment *schedule = generate_schedule(&solution);
     print_schedule(schedule);
+
+    if (VISUALISATION) {
+        /* abort visualisation */
+        pthread_cancel(visualisation);
+    }
 
     /* avoid memory leakage */
     afree(schedule);
@@ -70,6 +92,9 @@ static void evaluate_input_parameters(int argc, char *argv[]) {
         } else if (!strcmp(argv[i] + 1, "a")) {
             extract_int(argv[++i], &ALGORITHM);
             printf("algorithm\n");
+        } else if (!strcmp(argv[i] + 1, "v")) {
+            extract_int(argv[++i], &VISUALISATION);
+            printf("visualisation\n");
         }
     }
 }
