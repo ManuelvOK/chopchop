@@ -20,6 +20,7 @@ enum {
 };
 
 static unsigned *colors = NULL;
+static unsigned max_width = 0;
 
 static int init_SDL();
 static void draw_model(struct jsp *model);
@@ -96,15 +97,21 @@ static void draw_model(struct jsp *model) {
 
     struct time_assignment *schedule = generate_schedule(model);
     init_colors(model->n_jobs);
-    int job_height = (HEIGHT - 2 * MARGIN) / (model->n_machines) - 10;
+    unsigned job_height = ((HEIGHT - 2 * MARGIN) + 10) / (model->n_machines) - 10;
     aforeach(i, schedule) {
-        SDL_Rect r = {schedule[i].start / 4 + MARGIN + 1,
-                      schedule[i].machine * (job_height + 10) + MARGIN + 1 + 5,
-                      (schedule[i].end - schedule[i].start) / 4,
+        if (schedule[i].end > max_width) {
+            max_width = schedule[i].end;
+        }
+    }
+    float relative_width = ((WIDTH - 2 * MARGIN) * 1.0f) / max_width;
+    aforeach(i, schedule) {
+        SDL_Rect r = {schedule[i].start * relative_width + MARGIN + 1,
+                      schedule[i].machine * (job_height + 10) + MARGIN,
+                      (schedule[i].end - schedule[i].start) * relative_width,
                       job_height};
         set_color(schedule[i].job);
         SDL_RenderFillRect(renderer, &r);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 127, 127, 127, 255);
         SDL_RenderDrawRect(renderer, &r);
     }
     afree(schedule);
@@ -126,7 +133,7 @@ static void set_color(int job) {
     float g = 0;
     float b = 0;
 
-    HSV_to_RGB((float)colors[job], 1.0f, 1.0f, &r, &g, &b);
+    HSV_to_RGB((float)colors[job], 0.7f, 0.9f, &r, &g, &b);
     SDL_SetRenderDrawColor(renderer, r * 255, g * 255, b * 255, 255);
 }
 
