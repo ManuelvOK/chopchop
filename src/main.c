@@ -11,6 +11,7 @@
 #include <pthread.h>
 
 static void evaluate_input_parameters(int argc, char *argv[]);
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 char in[255] = "input";
 int T_MAX = 0;
@@ -31,7 +32,7 @@ int main(int argc, char *argv[]) {
     struct jsp jsp = eval_input(input);
     fclose(input);
 
-    /* this is for vsualisation */
+    /* this is for visualisation */
     struct jsp *model = &jsp;
 
     /* start visualisation */
@@ -39,7 +40,8 @@ int main(int argc, char *argv[]) {
 
     if (VISUALISATION) {
         if (pthread_create(&visualisation, NULL, visualise, (void *) &model)) {
-            printf("Visualisation Failed\n");
+            perror("Error creating thread for visualisation");
+            exit(EXIT_FAILURE);
         }
     }
 
@@ -47,14 +49,16 @@ int main(int argc, char *argv[]) {
     struct jsp solution = optimise(jsp, &model, ALGORITHM, T_MAX, TEMP_INI, C_RATE);
 
     /* print solution */
-    puts("");
     struct time_assignment *schedule = generate_schedule(&solution);
     print_schedule(schedule);
 
     if (VISUALISATION) {
-        /* abort visualisation */
-        pthread_cancel(visualisation);
+        /* wait for user to end visualisation */
+        void *retval;
+        pthread_join(visualisation, &retval);
     }
+
+    pthread_mutex_destroy(&mutex);
 
     /* avoid memory leakage */
     afree(schedule);
@@ -79,22 +83,16 @@ static void evaluate_input_parameters(int argc, char *argv[]) {
         }
         if (!strcmp(argv[i] + 1, "i")) {
             strcpy(in, argv[++i]);
-            printf("in\n");
         } else if (!strcmp(argv[i] + 1, "t")) {
             extract_int(argv[++i], &T_MAX);
-            printf("t_max\n");
         } else if (!strcmp(argv[i] + 1, "T")) {
             extract_int(argv[++i], &TEMP_INI);
-            printf("temp_ini\n");
         } else if (!strcmp(argv[i] + 1, "c")) {
             extract_int(argv[++i], &C_RATE);
-            printf("c_rate\n");
         } else if (!strcmp(argv[i] + 1, "a")) {
             extract_int(argv[++i], &ALGORITHM);
-            printf("algorithm\n");
         } else if (!strcmp(argv[i] + 1, "v")) {
             extract_int(argv[++i], &VISUALISATION);
-            printf("visualisation\n");
         }
     }
 }

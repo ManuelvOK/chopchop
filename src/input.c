@@ -3,14 +3,16 @@
 #include <input.h>
 
 #ifndef DEBUG
-#define DEBUG 1
+#define DEBUG 0
 #endif /* DEBUG */
 
 struct jsp eval_input(FILE* input_file) {
     /* extract first line from file */
     char line[256] = {0};
     fgets(line, 255, input_file);
+#if DEBUG
     printf("%s\n", line);
+#endif
 
     /* scan job- and operation count from first line */
     unsigned n_jobs;

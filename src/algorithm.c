@@ -1,6 +1,7 @@
 #include <algorithm.h>
 
 #include <math.h>
+#include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -9,8 +10,7 @@
 #include <eval.h>
 #include <hood.h>
 
-//enum {T_MAX = 8000000, TEMP_INITIAL = 22};
-//static const double cooling_rate = 10;
+extern pthread_mutex_t mutex;
 
 static bool accept_anyways(unsigned cur_eval, unsigned neigh_eval,
                            double temperature);
@@ -56,6 +56,9 @@ struct jsp optimise(struct jsp schedule, struct jsp **current,
     if (schedule.operations != NULL) {
         delete_jsp(&schedule);
     }
+    pthread_mutex_lock(&mutex);
+    *current = NULL;
+    pthread_mutex_unlock(&mutex);
     return optimum;
 }
 

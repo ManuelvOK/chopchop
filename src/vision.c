@@ -9,6 +9,8 @@
 #include <pthread.h>
 #include <stdio.h>
 
+extern pthread_mutex_t mutex;
+
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 enum {
@@ -41,7 +43,11 @@ void *visualise(void *shedule) {
                 running = 0;
             }
         }
-        draw_model(*model);
+        pthread_mutex_lock(&mutex);
+        if (*model != NULL) {
+            draw_model(*model);
+        }
+        pthread_mutex_unlock(&mutex);
     }
 
     if (colors) {
