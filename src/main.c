@@ -13,22 +13,29 @@
 static void evaluate_input_parameters(int argc, char *argv[]);
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-char in[255] = "input";
-int T_MAX = 0;
-int TEMP_INI = 0;
-int C_RATE = 0;
-int ALGORITHM = 0;
-int VISUALISATION = 0;
+char in[255] = "";
+int T_MAX = 1000000;
+int TEMP_INI = 30;
+int C_RATE = 3;
+int ALGORITHM = 2;
+int VISUALISATION = 1;
 
 int main(int argc, char *argv[]) {
 
 
     evaluate_input_parameters(argc, argv);
+    if (T_MAX < 100000) {
+        T_MAX = 100000;
+    }
     /* initialise RNG */
     srand(time(NULL));
 
     /* read input file */
     FILE* input = fopen(in, "r");
+    if (input == NULL) {
+        perror("Error opening input file");
+        exit(EXIT_FAILURE);
+    }
     struct jsp jsp = eval_input(input);
     fclose(input);
 
