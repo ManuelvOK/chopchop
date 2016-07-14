@@ -59,7 +59,18 @@ int main(int argc, char *argv[]) {
     struct time_assignment *schedule = generate_schedule(&solution);
     print_schedule(schedule);
 
+    printf("\n############################################\n");
+    unsigned max_time = 0;
+    aforeach(i, schedule) {
+        if (schedule[i].end > max_time) {
+            max_time = schedule[i].end;
+        }
+    }
+    printf("\tBest solution finishes in %u\n",max_time);
+    printf("############################################\n");
+
     if (VISUALISATION) {
+        printf("\nClose window to exit program.\n");
         /* wait for user to end visualisation */
         void *retval;
         pthread_join(visualisation, &retval);
