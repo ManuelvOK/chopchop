@@ -96,11 +96,11 @@ static void draw_model(struct jsp *model) {
 
     struct time_assignment *schedule = generate_schedule(model);
     init_colors(model->n_jobs);
-    int job_height = (HEIGHT - 2 * MARGIN) / (model->n_machines - 1) - 10;
+    int job_height = (HEIGHT - 2 * MARGIN) / (model->n_machines) - 10;
     aforeach(i, schedule) {
         SDL_Rect r = {schedule[i].start / 4 + MARGIN + 1,
-                      schedule[i].machine * (job_height + 5) + MARGIN + 1,
-                      schedule[i].end - schedule[i].start,
+                      schedule[i].machine * (job_height + 10) + MARGIN + 1 + 5,
+                      (schedule[i].end - schedule[i].start) / 4,
                       job_height};
         set_color(schedule[i].job);
         SDL_RenderFillRect(renderer, &r);
